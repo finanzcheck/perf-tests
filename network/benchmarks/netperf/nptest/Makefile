@@ -15,7 +15,7 @@
 all: nptests
 
 nptests: ./nptest.go
-	@go build -o nptests
+	GOOS=linux go build -o nptests
 
 clean:
 	@rm -f nptests

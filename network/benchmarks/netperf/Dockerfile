@@ -31,7 +31,7 @@ RUN apt-get update \
 RUN mkdir -p /tmp
 
 # Download and build netperf from sources
-RUN curl -LO ftp://ftp.netperf.org/netperf/netperf-2.7.0.tar.gz && tar -xzf netperf-2.7.0.tar.gz
+RUN curl -LO https://fossies.org/linux/misc/netperf-2.7.0.tar.gz && tar -xzf netperf-2.7.0.tar.gz
 RUN cd netperf-2.7.0 && ./configure --prefix=/usr/local --bindir /usr/local/bin && make && make install
 
 COPY nptests /usr/bin/

@@ -13,14 +13,14 @@
 # limitations under the License.
 
 all: docker nptests push launch runtests
-
-DOCKERREPO       := girishkalele/netperf-latest
+# girishkalele/netperf-latest
+DOCKERREPO       := valdemon/netperf-latest
 
 docker: nptests launch
 	mkdir -p Dockerbuild && \
 	cp -f Dockerfile Dockerbuild/ && \
 	cp -f nptest/nptests Dockerbuild/ &&\
-	docker build -t $(DOCKERREPO) Dockerbuild/ 
+	docker build -t $(DOCKERREPO) Dockerbuild/
 
 push: docker
 	gcloud docker push $(DOCKERREPO)
@@ -37,12 +37,12 @@ clean:
 launch: launch.go
 	go build -o launch launch.go
 
+charts:
+	cp netperf-latest.csv plotperf && cd plotperf; make plot && mv *png .. && mv *svg .. && cd ..
 # 'runtests' is the test runner target
 runtests: launch
 	@echo Launching network performance tests
-	./launch
+	./launch --kubeConfig $(HOME)/.kube/config
 	@echo Network performance tests complete - running matplotlib to generate graphs and copy them back
-	cp netperf-latest.csv plotperf && cd plotperf; make plot && mv *png .. && mv *svg ..
+	cp netperf-latest.csv plotperf && cd plotperf; make plot && mv *png .. && mv *svg .. && cd ..
 	@echo Results file netperf-latest.csv and SVG/PNG graphs generated successfully
-
-

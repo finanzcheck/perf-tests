@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+Y_RANGE ?= 45000
+TESTCASE ?= netperf-latest
+
 all: plot
 
-PLOTTER_DOCKER_IMAGE := girishkalele/netperf-plotperf
+PLOTTER_DOCKER_IMAGE := valdemon/netperf-plotperf
 
 # Use this target 'plot' to run the docker container that will pick up netperf-latest.csv and render it into png and svg images
 plot: netperf-latest.csv
 	mkdir -p tmp && cp netperf-latest.csv tmp/ &&\
-	docker run --detach=false -v `pwd`/tmp:/plotdata $(PLOTTER_DOCKER_IMAGE) --csv /plotdata/netperf-latest.csv --suffix netperf-latest &&\
+	docker run --detach=false -v `pwd`/tmp:/plotdata $(PLOTTER_DOCKER_IMAGE) --csv /plotdata/netperf-latest.csv --suffix netperf-latest --yrange $(Y_RANGE) --testcase $(TESTCASE) &&\
 	cp tmp/* .
